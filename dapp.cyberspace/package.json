@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/harlowk/cyberspace-blockchain#readme",
   "dependencies": {
-    "@chainlink/contracts": "^0.1.7"
+    "@chainlink/contracts": "^0.1.7",
+    "solidity-patricia-tree": "^2.0.2"
   }
 }
