@@ -1,7 +1,7 @@
 pragma solidity ^0.8.0;
 
 import {D} from "./ds.patricia-data.sol";
-import {Utils} from "./utils.sol";
+import {Utils} from "../utilities/utils.sol";
 
 /**
  MIT License
@@ -9,7 +9,7 @@ import {Utils} from "./utils.sol";
  Rewritten by: Wanseob Lim
  */
 
-library Network {
+library PatriciaTree {
     struct Tree {
         // Mapping of hash of key to value
         mapping(bytes32 => bytes) values;

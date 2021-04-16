@@ -1,49 +1,49 @@
 pragma solidity ^0.8.0;
 
-import {D} from "./infrastructure/ds.patricia-data.sol";
-import {Network} from "./infrastructure/ds.network.sol";
+import {D} from "./data-structures/ds.patricia-data.sol";
+import {PatriciaTree} from "./data-structures/ds.patricia-tree.sol";
 
-contract CyberspaceGlobalAuthority {
-    using Network for Network.Tree;
-    Network.Tree networktree;
+contract CyberspaceNetworkTree {
+    using PatriciaTree for PatriciaTree.Tree;
+    PatriciaTree.Tree network;
 
     constructor () public {
     }
 
     function insert(bytes memory key, bytes memory value) public {
-        networktree.insert(key, value);
+        network.insert(key, value);
     }
 
     function get(bytes memory key) public view returns (bytes memory) {
-        return networktree.get(key);
+        return network.get(key);
     }
 
     function safeGet(bytes memory key) public view returns (bytes memory) {
-        return networktree.safeGet(key);
+        return network.safeGet(key);
     }
 
     function doesInclude(bytes memory key) public view returns (bool) {
-        return networktree.doesInclude(key);
+        return network.doesInclude(key);
     }
 
     function getValue(bytes32 hash) public view returns (bytes memory) {
-        return networktree.values[hash];
+        return network.values[hash];
     }
 
     function getRootHash() public view returns (bytes32) {
-        return networktree.getRootHash();
+        return network.getRootHash();
     }
 
     function getNode(bytes32 hash) public view returns (uint, bytes32, bytes32, uint, bytes32, bytes32) {
-        return networktree.getNode(hash);
+        return network.getNode(hash);
     }
 
     function getRootEdge() public view returns (uint, bytes32, bytes32) {
-        return networktree.getRootEdge();
+        return network.getRootEdge();
     }
 
     function getProof(bytes memory key) public view returns (uint branchMask, bytes32[] memory _siblings) {
-        return networktree.getProof(key);
+        return network.getProof(key);
     }
 
     function getNonInclusionProof(bytes memory key) public view returns (
@@ -52,14 +52,14 @@ contract CyberspaceGlobalAuthority {
         uint branchMask,
         bytes32[] memory _siblings
     ) {
-        return networktree.getNonInclusionProof(key);
+        return network.getNonInclusionProof(key);
     }
 
     function verifyProof(bytes32 rootHash, bytes memory key, bytes memory value, uint branchMask, bytes32[] memory siblings) public pure {
-        networktree.verifyProof(rootHash, key, value, branchMask, siblings);
+        PatriciaTree.verifyProof(rootHash, key, value, branchMask, siblings);
     }
 
     function verifyNonInclusionProof(bytes32 rootHash, bytes memory key, bytes32 leafLabel, bytes32 leafNode, uint branchMask, bytes32[] memory siblings) public pure {
-        networktree.verifyNonInclusionProof(rootHash, key, leafLabel, leafNode, branchMask, siblings);
+        PatriciaTree.verifyNonInclusionProof(rootHash, key, leafLabel, leafNode, branchMask, siblings);
     }
 }
