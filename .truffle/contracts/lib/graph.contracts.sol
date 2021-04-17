@@ -1,9 +1,9 @@
 pragma solidity ^0.8.0;
 
-import {GraphLib} from "../libraries/graph/GraphLib.sol";
-import "../libraries/graph/HitchensUnorderedAddressSet.sol";
+import {GraphLib} from "./graph.sol";
+import "./graph.sol";
 
-contract CyberspaceGraph {
+contract GraphContracts {
     using GraphLib for GraphLib.Graph;
     using HitchensUnorderedAddressSetLib for HitchensUnorderedAddressSetLib.Set;
     GraphLib.Graph graph;

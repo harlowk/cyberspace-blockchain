@@ -1,0 +1,34 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "editor.minimap.enabled": false,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.wordWrap": "on",
+    "files.associations": {
+        "*.sol": "solidity"
+    },
+    "workbench.iconTheme": "material-icon-theme",
+    "material-icon-theme.showUpdateMessage": false,
+    "solidity.compileUsingRemoteVersion": "latest",
+    "solidity.linter": "solium",
+    "solidity.packageDefaultDependenciesContractsDirectory": "contracts",
+    "solidity.packageDefaultDependenciesDirectory": "node_modules",
+    "solidity.soliumRules": {
+        "imports-on-top": 0,
+        "variable-declarations": 0,
+        "no-inline-assembly": 5,
+        "indentation": [
+            "error",
+            2
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ]
+    },
+    "solidity.validationDelay": 1000,
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
+    "window.zoomLevel": 1,
+    
+}

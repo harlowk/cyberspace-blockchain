@@ -1,11 +1,8 @@
 {
-  "name": "dapp.chainlink",
+  "name": "cyberspace-chainlink",
   "version": "1.0.0",
-  "description": "dapp smart contracts and deployments with truffle.",
-  "main": "truffle-config.js",
-  "directories": {
-    "test": "test"
-  },
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,10 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/harlowk/cyberspace-blockchain.git"
   },
-  "keywords": [
-    "blockchain"
-  ],
-  "author": "harlowk",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/harlowk/cyberspace-blockchain/issues"
@@ -24,6 +18,7 @@
   "homepage": "https://github.com/harlowk/cyberspace-blockchain#readme",
   "dependencies": {
     "@chainlink/contracts": "^0.1.7",
-    "solidity-patricia-tree": "^2.0.2"
+    "chainlink": "^0.8.2",
+    "truffle": "^5.3.2"
   }
 }
