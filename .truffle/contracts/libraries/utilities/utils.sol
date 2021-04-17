@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
  Original author: chriseth
  */
 
-import {D} from "../data-structures/ds.patricia-data.sol";
+import {D} from "../datastructures/ds.patricia-data.sol";
 
 library Utils {
     /// Returns a label containing the longest common prefix of `check` and `label`

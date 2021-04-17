@@ -1,7 +1,7 @@
 pragma solidity ^0.8.0;
 
-import {D} from "./data-structures/ds.patricia-data.sol";
-import {PatriciaTree} from "./data-structures/ds.patricia-tree.sol";
+import {D} from "./patricia-tree/ds.patricia-data.sol";
+import {PatriciaTree} from "./patricia-tree/ds.patricia-tree.sol";
 
 contract CyberspaceNetworkTree {
     using PatriciaTree for PatriciaTree.Tree;

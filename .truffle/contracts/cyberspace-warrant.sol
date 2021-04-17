@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
-contract CyberAsset {
-    
+
+contract PromisedCyberArtifact {
+    //signed
     // enum StateType { PendingReview, Healthy, UnHealthy, Modified, PendingInspection, Inspected, CommisionerAccepted, ResourceOwnerAccepted, Locked, Disabled, Terminated }
     // struct Meta {
     //     string ID;
