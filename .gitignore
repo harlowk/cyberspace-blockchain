@@ -1,6 +1,6 @@
 node_modules/
-./truffle/vscode
-.package-lock.json
+.truffle/.vscode/*
+package-lock.json
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
