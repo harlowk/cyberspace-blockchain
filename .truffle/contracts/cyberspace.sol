@@ -1,7 +1,10 @@
 pragma solidity ^0.8.0;
 
-import {PromisedCyberArtifact} from "./cyberspace-warrant.sol";
-import {CyberspaceNetworkTree} from "./libraries/cyberspace-network-tree.sol";
+import "chainlink/contracts/Oracle.sol";
+import "chainlink/contracts/ChainlinkClient.sol";
+import "chainlink/contracts/vendor/Ownable.sol";
+import "chainlink/contracts/interfaces/LinkTokenInterface.sol";
+import "chainlink/contracts/interfaces/AggregatorInterface.sol";
 
 enum StatePolicyType { PendingReview, Healthy, UnHealthy, Modified, 
                 PendingInspection, Inspected, CommisionerAccepted, 
@@ -17,8 +20,6 @@ struct BondSignature {
     address promisor; // making the promise
     address promisee; // recieving the promise
     address[] observers; // those that can observe the bond.
-    PromisedCyberArtifact promiseContract;
-    StatePolicyType state;
 }
 
 
