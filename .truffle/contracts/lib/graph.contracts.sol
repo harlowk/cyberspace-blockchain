@@ -8,6 +8,7 @@ contract GraphContracts {
     using HitchensUnorderedAddressSetLib for HitchensUnorderedAddressSetLib.Set;
     GraphLib.Graph graph;
 
+
     function toBytes32(address a) private pure returns(bytes32) {
         return bytes32(uint(uint160(a)));
     }
