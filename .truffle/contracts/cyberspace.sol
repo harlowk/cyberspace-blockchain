@@ -76,16 +76,6 @@ contract Cyberspace is ChainlinkClient, Ownable {
             importance);
     }
 
-    function userFollowingAtIndex(address userId, uint index) public view returns(address followingId, uint importance) {
-        require(userSet.exists(userId), "GraphTest: Unknown user.");
-        bytes32 edgeId = userGraph.nodeTargetEdgeAtIndex(toBytes32(userId), index);
-        (bytes32 target, uint weight) = userGraph.edgeTarget(edgeId);
-        importance = weight;
-        followingId = toAddress(target);
-    }
-
-    
-
     function RemoveNode(address nodeId) public {
         network.removeNode(toBytes32(nodeId)); // this will not be permited while edges exist, so iterate over unfollow until permissible.
     
