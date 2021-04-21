@@ -18,73 +18,76 @@ contract Cyberspace is ChainlinkClient, Ownable, AccessControl {
     bytes32 public constant OWNER_ROLE = keccak256("OWNER_ROLE");
 
     using SafeMath_Chainlink for uint256;
+    using NodeNetwork for NodeNetwork.Network;
+    NodeNetwork.Network network;
+
+
+    
+}
+
+contract ResourceNode {
+    enum StateType {created, enabled, disabled, terminated, pending}
+    address public cyberspace;
+}
+
+
+contract NodeNetwork {
     using GraphLib for GraphLib.Graph;
     using HitchensUnorderedKeySetLib for HitchensUnorderedKeySetLib.Set;
+    
+    struct NodeMeta { address addr; }
 
-    GraphLib.Graph network;
-    struct NodeMeta {
-        address addr;
-        uint256 sources;
-        uint256 targets;
-    }
+    GraphLib.Graph public _graph;
+    HitchensUnorderedKeySetLib.Set private _hashes;
+    mapping(string => NodeMeta) public _nodes; // hashId => node
 
-    mapping(string => NodeMeta) private _nodes; // hashId => node
-    HitchensUnorderedKeySetLib.Set _hashset;
-
-    function InsertNode(string hashid) public {
-        _hashset.insert(hashid);
+    
+    function InsertNode(string hashid) public returns(address newNode){
+        _hashes.insert(hashid);
         _nodes[hashid].addr = new ResourceNode();
-        _nodes[hashid].sources = 0;
-        _nodes[hashid].targets = 0;
-        network.insertNode(toBytes32(_nodes[hashid].addr));
+        _graph.insertNode(toBytes32(_nodes[hashid].addr));
     }
 
     function LinkNodes(
-        string sourceHash,
-        string targetHash,
+        string hashidSource,
+        string hashidTarget,
         uint256 importance
     ) public {
         require(
-            _hashset.exists(sourceHash),
+            _hashes.exists(hashidSource),
             "Cyberspace Network: Unknown source hash."
         );
         require(
-            _hashset.exists(targetHash),
+            _hashes.exists(hashidTarget),
             "Cyberspace Network: Unknown target hash."
         );
 
-        network.insertEdge(
-            toBytes32(_nodes[sourceHash].addr),
-            toBytes32(_nodes[targetHash].addr),
+        _graph.insertEdge(
+            toBytes32(_nodes[hashidSource].addr),
+            toBytes32(_nodes[hashidTarget].addr),
             importance
         );
-
-        _nodes[sourceHash].targets++;
-        _nodes[targetHash].sources++;
     }
 
     function UnLinkNodes(
-        string sourceHash,
-        string targetHash,
+        string hashidSource,
+        string hashidTarget,
         uint256 importance
     ) public {
         require(
-            _hashset.exists(sourceHash),
+            _hashes.exists(hashidSource),
             "Cyberspace Network: Unknown source hash."
         );
         require(
-            _hashset.exists(targetHash),
+            _hashes.exists(hashidTarget),
             "Cyberspace Network: Unknown target hash."
         );
 
-        network.removeEdge(
-            toBytes32(_nodes[sourceHash].addr),
-            toBytes32(_nodes[targetHash].addr),
+        _graph.removeEdge(
+            toBytes32(_nodes[hashidSource].addr),
+            toBytes32(_nodes[hashidTarget].addr),
             importance
         );
-
-        _nodes[sourceHash].targets--;
-        _nodes[targetHash].sources--;
     }
 
     function GetLinkStats(string hashid)
@@ -93,10 +96,10 @@ contract Cyberspace is ChainlinkClient, Ownable, AccessControl {
         returns (uint256 uplinksCount, uint256 downlinksCount)
     {
         require(
-            _hashset.exists(hashid),
+            _hashes.exists(hashid),
             "Cyberspace Network: Unknown node hash."
         );
-        (uplinksCount, downlinksCount) = network.node(
+        (uplinksCount, downlinksCount) = _graph.node(
             toBytes32(_nodes[hashid].addr)
         );
     }
@@ -104,22 +107,21 @@ contract Cyberspace is ChainlinkClient, Ownable, AccessControl {
     function GetDownLinks(string hashid)
         public
         view
-        returns (address[] downlinks)
+        returns (address[] memory)
     {
         require(
-            _hashset.exists(hashid),
+            _hashes.exists(hashid),
             "Cyberspace Network: Unknown source hash."
         );
-        bytes32[] targets = network.nodeTargets(toBytes32(_nodes[hashid].addr));
-
-        downlinks = new address[](targets.length);
+        bytes32[] memory targets = _graph.nodeTargets(toBytes32(_nodes[hashid].addr));
+        address[] memory targetsAddresses = new address[](targets.length);
         for (uint256 i = 0; i < targets.length; i++) {
-            addresses[i] = toAddress(targets[i]);
+            targetsAddresses[i] = toAddress(targets[i]);
         }
     }
 
     function RemoveNode(address nodeId) public {
-        network.removeNode(toBytes32(nodeId)); // this will not be permited while edges exist, so iterate over unfollow until permissible.
+        _graph.removeNode(toBytes32(nodeId)); // this will not be permited while edges exist, so iterate over unfollow until permissible.
     }
 
     function toBytes32(address a) private pure returns (bytes32) {
@@ -129,9 +131,4 @@ contract Cyberspace is ChainlinkClient, Ownable, AccessControl {
     function toAddress(bytes32 b) private pure returns (address) {
         return address(uint160(uint256(b)));
     }
-}
-
-contract ResourceNode {
-    enum StateType {created, enabled, disabled, terminated, pending}
-    address public cyberspace;
 }
