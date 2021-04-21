@@ -7,24 +7,27 @@ import "chainlink/contracts/vendor/Ownable.sol";
 import {
     SafeMath as SafeMath_Chainlink
 } from "chainlink/v0.5/contracts/vendor/SafeMath.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 // enum StatePolicyType { PendingReview, Healthy, UnHealthy, Modified, 
 //                 PendingInspection, Inspected, CommisionerAccepted, 
 //                 ResourceOwnerAccepted, Locked, Disabled, Terminated }
 
-contract Cyberspace is ChainlinkClient, Ownable {
+contract Cyberspace is ChainlinkClient, Ownable, AccessControl  {
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant OWNER_ROLE = keccak256("OWNER_ROLE");
+
     using SafeMath_Chainlink for uint256;
     using GraphLib for GraphLib.Graph;    
     using HitchensUnorderedKeySetLib for HitchensUnorderedKeySetLib.Set;
 
-    address admin;    
     GraphLib.Graph network;
     struct NodeMeta { address addr; uint sources; uint targets; }       
         
     mapping(string => NodeMeta) private _nodes;  // hashId => node 
     HitchensUnorderedKeySetLib.Set _hashset;
     
-    function NewNode(string hashid) public {        
+    function InsertNode(string hashid) public {        
         _hashset.insert(hashid);                 
         _nodes[hashid].addr = new ResourceNode();
         _nodes[hashid].sources = 0;
@@ -61,19 +64,17 @@ contract Cyberspace is ChainlinkClient, Ownable {
 
     function GetLinkStats(string hashid) public view returns(uint uplinksCount, uint downlinksCount) {
         require(_hashset.exists(hashid), "Cyberspace Network: Unknown node hash.");
-        (uplinksCount, downlinksCount) = network.node(toBytes32(hashid));        
+        (uplinksCount, downlinksCount) = network.node(toBytes32(_nodes[hashid].addr));    
     }
 
-    function GetDownLinks(string hashid) public view returns(address[] targets, uint importance) {
-        require(_hashset.exists(sourceHash), "Cyberspace Network: Unknown source hash.");
-        (uint uplinksCount, uint downlinksCount) = GetLinkStats(hashid);
-         
-         bytes32 edgeId = network.nodeTargetEdgeAtIndex(toBytes32(_hashset[sourceHash].addr), index);
-        (bytes32 target, uint weight) = userGraph.edgeTarget(edgeId);
-        network.insertEdge(
-            toBytes32(_nodes[sourceHash].addr), 
-            toBytes32(_nodes[targetHash].addr), 
-            importance);
+    function GetDownLinks(string hashid) public view returns(address[] downlinks) {
+        require(_hashset.exists(hashid), "Cyberspace Network: Unknown source hash.");
+        bytes32[] targets = network.nodeTargets(toBytes32(_nodes[hashid].addr));
+        
+        downlinks = new address[](targets.length);
+        for(uint i = 0; i < targets.length; i++) {
+            addresses[i] = toAddress(targets[i]);
+        }
     }
 
     function RemoveNode(address nodeId) public {

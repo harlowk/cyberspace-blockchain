@@ -117,6 +117,30 @@ library GraphLib {
         NodeStruct storage n = g.nodeStructs[nodeId];
         return(n.sourceEdgeSet.count(), n.targetEdgeSet.count());
     }
+
+    function nodeTargets(Graph storage g, bytes32 nodeId) internal view returns(bytes32[] memory) {
+        require(g.nodeSet.exists(nodeId), "Graph: Unknown node.");
+        NodeStruct storage n = g.nodeStructs[nodeId];
+        bytes32[] memory targets = new bytes32[](n.targetEdgeSet.count());
+
+        for(uint i = 0; i < n.targetEdgeSet.count(); i++) {
+            bytes32 targetId = n.targetEdgeSet.keyAtIndex(i);
+            targets[i] = targetId;
+        }
+        return targets;
+    }
+
+    function nodeSources(Graph storage g, bytes32 nodeId) internal view returns(bytes32[] memory) {
+        require(g.nodeSet.exists(nodeId), "Graph: Unknown node.");
+        NodeStruct storage n = g.nodeStructs[nodeId];
+        bytes32[] memory sources = new bytes32[](n.sourceEdgeSet.count());
+
+        for(uint i = 0; i < n.sourceEdgeSet.count(); i++) {
+            bytes32 sourceId = n.sourceEdgeSet.keyAtIndex(i);
+            sources[i] = sourceId;
+        }
+        return sources;
+    }
     
     function nodeSourceEdgeAtIndex(Graph storage g, bytes32 nodeId, uint index) internal view returns(bytes32 sourceEdge) {
         require(g.nodeSet.exists(nodeId), "Graph: Unknown node.");
